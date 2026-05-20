@@ -1,0 +1,206 @@
+<!-- ============================================================================== -->
+<!-- gallery/templates/photo_detail.html -->
+<!-- ============================================================================== -->
+<!-- Analogy: This template is a premium dedicated "Spotlight Room" in our downtown New York gallery. -->
+<!-- Instead of showing a massive grid of pictures, we invite the visitor inside a quiet, -->
+<!-- dark space with single high-intensity dynamic spotlights focused on a single canvas, -->
+<!-- showing the title, photographer credits, and parent album with beautiful margins. -->
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <!-- Sets the character encoding for unicode support (so symbols and text load correctly) -->
+    <meta charset="UTF-8">
+    <!-- Sets the viewport properties so the browser knows to scale properly on tablets and mobile screens -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Dynamic page title: Prints the title of the photo fetched from our database catalog -->
+    <title>Lens — {{ photo.title }}</title>
+    
+    <!-- We load Tailwind CSS CDN to style our page with professional utility classes -->
+    <!-- Analogy: Bringing in a massive toolbox of pre-designed premium dark styling boards -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- We load Font Awesome CDN for clean, descriptive vector icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- We load Google Fonts (Outfit) for an extremely premium, geometric typography look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Apply Outfit as the default font across our entire portfolio site */
+        body {
+            font-family: 'Outfit', sans-serif;
+        }
+        /* Custom slow-spin animation for our aperture lens logo to make it feel alive and premium */
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .animate-spin-slow {
+            animation: spin-slow 20s linear infinite;
+        }
+    </style>
+</head>
+<body class="min-h-full bg-zinc-950 text-zinc-100 flex flex-col justify-between relative overflow-x-hidden selection:bg-zinc-800 selection:text-white">
+    
+    <!-- Background subtle ambient lighting glow (Glassmorphism & Depth) -->
+    <!-- Analogy: Soft studio lights shining from behind the gallery curtains to create a warm atmosphere -->
+    <div class="absolute top-[-10%] left-[20%] w-[500px] h-[500px] bg-zinc-800/10 rounded-full blur-[150px] pointer-events-none"></div>
+    <div class="absolute bottom-[20%] right-[-10%] w-[600px] h-[600px] bg-zinc-800/10 rounded-full blur-[160px] pointer-events-none"></div>
+
+    <!-- Navigation Header -->
+    <!-- Identical header layout to preserve style harmony across pages -->
+    <header class="w-full bg-zinc-950/80 backdrop-blur-xl border-b border-zinc-900 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <!-- Direct link back to the homepage index -->
+            <a href="/" class="flex items-center space-x-3 group">
+                <div class="flex items-center justify-center w-10 h-10 bg-zinc-900 border border-zinc-800 rounded-xl shadow-inner group-hover:border-zinc-700 transition duration-300">
+                    <!-- Aperture Icon with a slow rotation to feel like an active camera lens -->
+                    <i class="fa-solid fa-aperture text-zinc-400 group-hover:text-white text-lg animate-spin-slow"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-black text-xl tracking-wider text-white uppercase">
+                        Lens
+                    </span>
+                    <span class="text-[9px] text-zinc-500 font-bold tracking-widest uppercase mt-[-2px]">
+                        Portfolio
+                    </span>
+                </div>
+            </a>
+
+            <!-- Dynamic Header Control Panel -->
+            <!-- If the user is logged in, show their email, dashboard link, and logout button. -->
+            <div class="flex items-center space-x-4">
+                {% if user.is_authenticated %}
+                    <span class="text-zinc-500 text-xs font-semibold tracking-wider hidden md:inline-block">
+                        <i class="fa-regular fa-circle-user mr-1.5 text-zinc-400"></i> {{ user.email }}
+                    </span>
+                    <!-- Create Album Link: leading to the dynamic creation workshop -->
+                    <a href="{% url 'album_create' %}" class="py-2.5 px-5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-white font-semibold rounded-xl text-xs transition duration-200 shadow-sm flex items-center">
+                        <i class="fa-solid fa-folder-plus mr-1.5 text-zinc-400"></i> Create Album
+                    </a>
+                    <a href="/dashboard/" class="py-2.5 px-5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-white font-semibold rounded-xl text-xs transition duration-200 shadow-sm flex items-center">
+                        <i class="fa-solid fa-chart-line mr-1.5"></i> Dashboard
+                    </a>
+                    <a href="{% url 'logout' %}" class="py-2.5 px-5 bg-red-950/30 hover:bg-red-900/40 border border-red-900/50 text-red-400 font-semibold rounded-xl text-xs transition duration-200 shadow-sm flex items-center">
+                        <i class="fa-solid fa-arrow-right-from-bracket mr-1.5"></i> Logout
+                    </a>
+                {% else %}
+                    <a href="/login/" class="py-2.5 px-5 text-zinc-400 hover:text-white font-semibold text-xs transition duration-200">
+                        Sign In
+                    </a>
+                    <a href="/register/" class="py-2.5 px-5 bg-zinc-100 hover:bg-white text-zinc-950 font-bold rounded-xl text-xs transition duration-200 shadow-md">
+                        Get Started
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Spotlight Container -->
+    <main class="flex-grow w-full max-w-7xl mx-auto px-6 py-12 flex flex-col items-center justify-center relative z-10 space-y-8">
+        
+        <!-- Step Back Control Link -->
+        <!-- Analogy: A clean directional sign guiding guests back to the main public exhibition corridor -->
+        <div class="w-full flex justify-start">
+            <a href="{% url 'index' %}" class="inline-flex items-center space-x-2.5 text-zinc-400 hover:text-white transition duration-300 font-semibold text-sm group">
+                <!-- Font Awesome Arrow Left icon shifts slightly to the left on hover to represent stepping back -->
+                <i class="fa-solid fa-arrow-left transition-transform duration-300 group-hover:-translate-x-1.5 text-zinc-500 group-hover:text-white"></i>
+                <span>Back to Portfolio Gallery</span>
+            </a>
+        </div>
+
+        <!-- Big, Beautifully Centered Showcase Canvas -->
+        <!-- Designed specifically to scale naturally on all screens so it remains clear, huge, and centered -->
+        <!-- Analogy: The main spotlight frame centered on the wall of our private viewing suite -->
+        <div class="w-full flex flex-col items-center justify-center space-y-8">
+            
+            <!-- Large Image Wrapper Frame -->
+            <!-- We set max height limits (max-h-[75vh]) and use width auto/full to ensure aspect ratios are preserved -->
+            <div class="w-full max-w-5xl bg-zinc-900/20 border border-zinc-900/60 p-2 sm:p-3 rounded-3xl shadow-2xl flex items-center justify-center overflow-hidden">
+                <!-- Dynamic Image Box -->
+                <!-- The image is perfectly centered, naturally big, object-contain ensures no cropping or distortions occur -->
+                <img src="{{ photo.image.url }}" alt="{{ photo.title }}" class="rounded-2xl max-w-full max-h-[70vh] sm:max-h-[75vh] object-contain shadow-inner transition-all duration-500 hover:scale-[1.005]">
+            </div>
+
+            <!-- Detailed Photographic Metadata Card -->
+            <!-- Analogy: The beautifully typed brass caption frame mounted underneath the primary artwork -->
+            <div class="w-full max-w-3xl bg-zinc-900/40 border border-zinc-900/80 rounded-2xl p-6 sm:p-8 space-y-6 shadow-xl backdrop-blur-md">
+                
+                <!-- Header Stats row -->
+                <div class="flex flex-wrap items-center justify-between gap-4 border-b border-zinc-900/80 pb-5">
+                    
+                    <!-- Title & Album Title details -->
+                    <div class="space-y-1.5">
+                        <!-- Dynamic Photo Title Heading -->
+                        <h1 class="text-2xl sm:text-3xl font-black text-white tracking-tight leading-none">
+                            {{ photo.title }}
+                        </h1>
+                        <!-- Associated Album tag lookup -->
+                        <div class="inline-flex items-center space-x-2 pt-1">
+                            <span class="py-1 px-2.5 bg-zinc-950 border border-zinc-800 text-[10px] font-extrabold tracking-widest text-zinc-400 uppercase rounded-md">
+                                <i class="fa-solid fa-folder-open text-[9px] mr-1.5"></i> {{ photo.album.title }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Upload Date Details -->
+                    <div class="flex flex-col text-left sm:text-right">
+                        <span class="text-[9px] text-zinc-500 font-bold tracking-widest uppercase">Uploaded On</span>
+                        <span class="text-zinc-300 text-sm font-semibold mt-0.5">
+                            <i class="fa-regular fa-calendar-days mr-1.5 text-zinc-400"></i> {{ photo.uploaded_at|date:"F d, Y" }}
+                        </span>
+                    </div>
+
+                </div>
+
+                <!-- Photographer Bio & Details Row -->
+                <!-- Analogy: The artist profile details sheet sharing credits with the portfolio author -->
+                <div class="flex items-center space-x-4">
+                    <!-- Placeholder premium avatar using dynamic initials to keep it completely visual without raw files -->
+                    <div class="w-12 h-12 bg-zinc-800 border border-zinc-700 rounded-full flex items-center justify-center text-zinc-300 font-black text-sm uppercase shadow-inner">
+                        <i class="fa-solid fa-signature"></i>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-[9px] text-zinc-500 font-bold tracking-widest uppercase">Photographed By</span>
+                        <!-- Associated Photographer details pulled dynamically via the user relation -->
+                        <span class="text-white text-sm font-bold tracking-wide mt-0.5">
+                            @{{ photo.album.user.username }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- If the album has an optional description, we showcase it here under the photo details -->
+                <!-- Analogy: Sharing the story of the overall album theme inside our spotlight private suite -->
+                {% if photo.album.description %}
+                    <div class="bg-zinc-950/40 border border-zinc-900/60 p-4 rounded-xl space-y-2">
+                        <h4 class="text-xs font-bold text-zinc-500 tracking-wider uppercase">Album Background Story</h4>
+                        <p class="text-zinc-400 text-xs sm:text-sm font-light leading-relaxed">
+                            {{ photo.album.description }}
+                        </p>
+                    </div>
+                {% endif %}
+
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="w-full border-t border-zinc-900 bg-zinc-950/40 py-8 text-center relative z-10">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
+            <p class="text-zinc-600 text-xs font-semibold">
+                &copy; 2026 LENS Gallery Portfolio. All rights reserved.
+            </p>
+            <div class="flex items-center space-x-6 text-zinc-500 text-sm">
+                <span class="hover:text-white cursor-pointer transition"><i class="fa-brands fa-instagram"></i></span>
+                <span class="hover:text-white cursor-pointer transition"><i class="fa-brands fa-twitter"></i></span>
+                <span class="hover:text-white cursor-pointer transition"><i class="fa-brands fa-unsplash"></i></span>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

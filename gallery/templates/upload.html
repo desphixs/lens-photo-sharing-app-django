@@ -1,0 +1,206 @@
+<!-- ============================================================================== -->
+<!-- gallery/templates/upload.html -->
+<!-- ============================================================================== -->
+<!-- Analogy: This template is a premium "Art Mounting & Exhibition Room". -->
+<!-- Inside this room, we present the artist with a secure submission clipboard. -->
+<!-- Crucially, we prepare a physical handbag vault slot (enctype="multipart/form-data") -->
+<!-- so the visitor can slide in their raw visual photography print. -->
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <!-- Standard characters encoding schema for robust Unicode rendering -->
+    <meta charset="UTF-8">
+    <!-- Viewport mapping for fluid responsiveness across phones, tablets, and desktops -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lens — Mount & Upload New Photograph</title>
+    
+    <!-- Load Tailwind CSS framework via CDN for utility class accessibility -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Load Font Awesome Icon library CDN for descriptive web vectors -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Load Google Fonts Outfit for an ultra-modern geometric design language -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Apply the geometric Outfit typography across the entire page body */
+        body {
+            font-family: 'Outfit', sans-serif;
+        }
+        /* Slow spin animation for our brand identity aperture icon */
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .animate-spin-slow {
+            animation: spin-slow 20s linear infinite;
+        }
+    </style>
+</head>
+<body class="min-h-full bg-zinc-950 text-zinc-100 flex flex-col justify-between relative overflow-x-hidden selection:bg-zinc-800 selection:text-white">
+
+    <!-- Ambient blur lighting effects for a high-end glassmorphic glass showroom atmosphere -->
+    <div class="absolute top-[-10%] left-[20%] w-[500px] h-[500px] bg-zinc-800/10 rounded-full blur-[150px] pointer-events-none"></div>
+    <div class="absolute bottom-[20%] right-[-10%] w-[600px] h-[600px] bg-zinc-800/10 rounded-full blur-[160px] pointer-events-none"></div>
+
+    <!-- Navigation Header -->
+    <header class="w-full bg-zinc-950/80 backdrop-blur-xl border-b border-zinc-900 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="/" class="flex items-center space-x-3 group">
+                <div class="flex items-center justify-center w-10 h-10 bg-zinc-900 border border-zinc-800 rounded-xl shadow-inner group-hover:border-zinc-700 transition duration-300">
+                    <i class="fa-solid fa-aperture text-zinc-400 group-hover:text-white text-lg animate-spin-slow"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-black text-xl tracking-wider text-white uppercase">Lens</span>
+                    <span class="text-[9px] text-zinc-500 font-bold tracking-widest uppercase mt-[-2px]">Portfolio</span>
+                </div>
+            </a>
+
+            <!-- Header Control panel -->
+            <div class="flex items-center space-x-4">
+                {% if user.is_authenticated %}
+                    <span class="text-zinc-500 text-xs font-semibold tracking-wider hidden md:inline-block">
+                        <i class="fa-regular fa-circle-user mr-1.5 text-zinc-400"></i> {{ user.email }}
+                    </span>
+                    <a href="{% url 'album_create' %}" class="py-2.5 px-5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-white font-semibold rounded-xl text-xs transition duration-200 shadow-sm flex items-center">
+                        <i class="fa-solid fa-folder-plus mr-1.5 text-zinc-400"></i> Create Album
+                    </a>
+                    <a href="/dashboard/" class="py-2.5 px-5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-white font-semibold rounded-xl text-xs transition duration-200 shadow-sm flex items-center">
+                        <i class="fa-solid fa-chart-line mr-1.5"></i> Dashboard
+                    </a>
+                    <a href="{% url 'logout' %}" class="py-2.5 px-5 bg-red-950/30 hover:bg-red-900/40 border border-red-900/50 text-red-400 font-semibold rounded-xl text-xs transition duration-200 shadow-sm flex items-center">
+                        <i class="fa-solid fa-arrow-right-from-bracket mr-1.5"></i> Logout
+                    </a>
+                {% else %}
+                    <a href="/login/" class="py-2.5 px-5 text-zinc-400 hover:text-white font-semibold text-xs transition duration-200">Sign In</a>
+                    <a href="/register/" class="py-2.5 px-5 bg-zinc-100 hover:bg-white text-zinc-950 font-bold rounded-xl text-xs transition duration-200 shadow-md">Get Started</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Upload Form Wrapper -->
+    <main class="flex-grow w-full max-w-7xl mx-auto px-6 py-16 flex flex-col items-center justify-center relative z-10 space-y-8">
+        
+        <!-- Step Back Control Link -->
+        <div class="w-full max-w-xl flex justify-start">
+            <a href="{% url 'index' %}" class="inline-flex items-center space-x-2.5 text-zinc-400 hover:text-white transition duration-300 font-semibold text-sm group">
+                <i class="fa-solid fa-arrow-left transition-transform duration-300 group-hover:-translate-x-1.5 text-zinc-500 group-hover:text-white"></i>
+                <span>Back to Portfolio Gallery</span>
+            </a>
+        </div>
+
+        <!-- Premium Glassmorphic Upload Form Card -->
+        <div class="w-full max-w-xl bg-zinc-900/30 border border-zinc-900/80 hover:border-zinc-800/60 rounded-3xl p-8 sm:p-10 space-y-8 shadow-2xl backdrop-blur-md transition-all duration-300">
+            
+            <!-- Section Header Title -->
+            <div class="space-y-2">
+                <div class="inline-flex items-center space-x-2 px-3 py-1 bg-zinc-950 border border-zinc-800 rounded-full text-zinc-400 text-[10px] font-extrabold tracking-widest uppercase">
+                    <i class="fa-solid fa-cloud-arrow-up text-[9px] mr-1.5"></i> <span>Studio Upload desk</span>
+                </div>
+                <h1 class="text-3xl font-black tracking-tight text-white leading-none">
+                    Upload Photograph
+                </h1>
+                <p class="text-zinc-400 text-xs sm:text-sm font-light leading-relaxed">
+                    Select a high-quality capture file from your local computer, specify a themed binder, and save it to the gallery museum table.
+                </p>
+            </div>
+
+            <!-- Standard HTML form with dynamic POST handler -->
+            <!-- enctype="multipart/form-data": SUPER CRITICAL! Tells the browser to split the request payload -->
+            <!-- into multiple blocks so that the raw binary picture file is sent alongside text inputs. -->
+            <!-- Without this tag, the server will receive the image filename string but NOT the actual picture bytes! -->
+            <form method="POST" enctype="multipart/form-data" class="space-y-6">
+                <!-- Django CSRF Security Token protection -->
+                <!-- Proves this submission is coming directly from our authenticated app layout tab -->
+                {% csrf_token %}
+                
+                <!-- Target Album Dropdown Field Block -->
+                <div class="space-y-2.5">
+                    <label for="{{ form.album.id_for_label }}" class="text-xs font-bold text-zinc-400 tracking-wider uppercase flex items-center justify-between">
+                        <span>Select Album Collection (Required)</span>
+                        <i class="fa-solid fa-folder-open text-zinc-500 text-[10px]"></i>
+                    </label>
+                    
+                    <!-- We wrap the select in a relative container to customize the dropdown chevron icon -->
+                    <div class="relative w-full">
+                        <!-- Django renders our styled choice dropdown selection widget -->
+                        {{ form.album }}
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-zinc-500">
+                            <i class="fa-solid fa-chevron-down text-xs"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- Display validation errors for the album collection dropdown -->
+                    {% if form.album.errors %}
+                        <p class="text-xs text-red-500 font-semibold mt-1">
+                            {{ form.album.errors.as_text }}
+                        </p>
+                    {% endif %}
+                </div>
+
+                <!-- Photograph Title Field Block -->
+                <div class="space-y-2.5">
+                    <label for="{{ form.title.id_for_label }}" class="text-xs font-bold text-zinc-400 tracking-wider uppercase flex items-center justify-between">
+                        <span>Photograph Title</span>
+                        <i class="fa-solid fa-heading text-zinc-500 text-[10px]"></i>
+                    </label>
+                    <!-- Django renders our styled caption text input field widget -->
+                    {{ form.title }}
+                    
+                    <!-- Display validation errors for the caption title -->
+                    {% if form.title.errors %}
+                        <p class="text-xs text-red-500 font-semibold mt-1">
+                            {{ form.title.errors.as_text }}
+                        </p>
+                    {% endif %}
+                </div>
+
+                <!-- Photograph File Upload Input Field Block -->
+                <div class="space-y-2.5">
+                    <label for="{{ form.image.id_for_label }}" class="text-xs font-bold text-zinc-400 tracking-wider uppercase flex items-center justify-between">
+                        <span>Choose Image File</span>
+                        <i class="fa-solid fa-image text-zinc-500 text-[10px]"></i>
+                    </label>
+                    <!-- Django renders our styled custom file browse button widget -->
+                    {{ form.image }}
+                    
+                    <!-- Display validation errors for the uploaded photo canvas -->
+                    {% if form.image.errors %}
+                        <p class="text-xs text-red-500 font-semibold mt-1">
+                            {{ form.image.errors.as_text }}
+                        </p>
+                    {% endif %}
+                </div>
+
+                <!-- Action Triggers -->
+                <div class="flex items-center justify-end space-x-4 pt-4 border-t border-zinc-900/60">
+                    <a href="{% url 'index' %}" class="py-3 px-6 bg-transparent hover:bg-zinc-900/60 border border-zinc-900 text-zinc-400 hover:text-white font-bold rounded-xl text-xs transition duration-200">
+                        Cancel
+                    </a>
+                    <button type="submit" class="py-3 px-6 bg-zinc-100 hover:bg-white text-zinc-950 font-black rounded-xl text-xs transition duration-200 shadow-lg flex items-center cursor-pointer">
+                        <i class="fa-solid fa-cloud-arrow-up mr-1.5 text-zinc-950"></i> Upload Capture
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="w-full border-t border-zinc-900 bg-zinc-950/40 py-8 text-center relative z-10">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
+            <p class="text-zinc-600 text-xs font-semibold">&copy; 2026 LENS Gallery Portfolio. All rights reserved.</p>
+            <div class="flex items-center space-x-6 text-zinc-500 text-sm">
+                <span class="hover:text-white cursor-pointer transition"><i class="fa-brands fa-instagram"></i></span>
+                <span class="hover:text-white cursor-pointer transition"><i class="fa-brands fa-twitter"></i></span>
+                <span class="hover:text-white cursor-pointer transition"><i class="fa-brands fa-unsplash"></i></span>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

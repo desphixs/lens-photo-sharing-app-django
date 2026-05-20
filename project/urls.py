@@ -49,6 +49,10 @@ from django.conf.urls.static import static
 urlpatterns = [
     # Routes any requests starting with 'admin/' directly to the Django Admin backend.
     path('admin/', admin.site.urls),
+    # We include our custom gallery app urls.py.
+    # Since this is the primary landing page of our photo portfolio, we include it first
+    # so that the root URL ('') points directly to our photo showcase.
+    path('', include('gallery.urls')),
     # We include our accounts app urls.py. By passing an empty string '' as the prefix,
     # we allow routes defined in accounts/urls.py (like 'register/') to be accessed
     # directly at the root level (e.g., 'http://127.0.0.1:8000/register/').

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lens — Premium Photo Sharing Portfolio</title>
+    <!-- We load Tailwind CSS CDN to style our page with professional utility classes -->
+    <!-- Analogy: Handing the student a giant box of pre-painted Lego bricks so they don't have to mix paint from scratch! -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- We load Font Awesome CDN for clean, descriptive vector icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- We load Google Fonts (Outfit) for an extremely premium, high-fashion geometric typography look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* Apply Outfit as the default font across our entire portfolio site */
+        body {
+            font-family: 'Outfit', sans-serif;
+        }
+        /* Custom slow-spin animation for our aperture lens logo to make it feel alive and premium */
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .animate-spin-slow {
+            animation: spin-slow 20s linear infinite;
+        }
+    </style>
+</head>
+<body class="min-h-full bg-zinc-950 text-zinc-100 flex flex-col justify-between relative overflow-x-hidden selection:bg-zinc-800 selection:text-white">
+    
+    <!-- Background subtle ambient lighting glow (Glassmorphism & Depth) -->
+    <!-- Analogy: Soft studio lights shining from behind the gallery curtains to create a warm atmosphere -->
+    <div class="absolute top-[-10%] left-[20%] w-[500px] h-[500px] bg-zinc-800/10 rounded-full blur-[150px] pointer-events-none"></div>
+    <div class="absolute bottom-[20%] right-[-10%] w-[600px] h-[600px] bg-zinc-800/10 rounded-full blur-[160px] pointer-events-none"></div>
+
+    <!-- Navigation Header -->
+    <header class="w-full bg-zinc-950/80 backdrop-blur-xl border-b border-zinc-900 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="/" class="flex items-center space-x-3 group">
+                <div class="flex items-center justify-center w-10 h-10 bg-zinc-900 border border-zinc-800 rounded-xl shadow-inner group-hover:border-zinc-700 transition duration-300">
+                    <!-- Aperture Icon with a slow rotation to feel like an active camera lens -->
+                    <i class="fa-solid fa-aperture text-zinc-400 group-hover:text-white text-lg animate-spin-slow"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-black text-xl tracking-wider text-white uppercase">
+                        Lens
+                    </span>
+                    <span class="text-[9px] text-zinc-500 font-bold tracking-widest uppercase mt-[-2px]">
+                        Portfolio
+                    </span>
+                </div>
+            </a>
+
+            <!-- Dynamic Header Control Panel -->
+            <!-- If the user is logged in, show their email, dashboard link, and logout button. -->
+            <!-- If they are a guest, show standard sign-in and registration links. -->
+            <div class="flex items-center space-x-4">
+                {% if user.is_authenticated %}
+                    <span class="text-zinc-500 text-xs font-semibold tracking-wider hidden md:inline-block">
+                        <i class="fa-regular fa-circle-user mr-1.5 text-zinc-400"></i> {{ user.email }}
+                    </span>
+                    <!-- Upload Photo Link: leading to the secure photo upload desk -->
+                    <a href="{% url 'photo_upload' %}" class="py-2.5 px-5 bg-zinc-100 hover:bg-white text-zinc-950 font-bold rounded-xl text-xs transition duration-200 shadow-md flex items-center">
+                        <i class="fa-solid fa-cloud-arrow-up mr-1.5 text-zinc-950"></i> Upload Photo
+                    </a>
+                    <!-- Create Album Link: leading to the dynamic creation workshop -->
+                    <a href="{% url 'album_create' %}" class="py-2.5 px-5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-white font-semibold rounded-xl text-xs transition duration-200 shadow-sm flex items-center">
+                        <i class="fa-solid fa-folder-plus mr-1.5 text-zinc-400"></i> Create Album
+                    </a>
+                    <!-- Dashboard Link -->
+                    <a href="/dashboard/" class="py-2.5 px-5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-white font-semibold rounded-xl text-xs transition duration-200 shadow-sm flex items-center">
+                        <i class="fa-solid fa-chart-line mr-1.5"></i> Dashboard
+                    </a>
+                    <!-- Logout Trigger -->
+                    <a href="{% url 'logout' %}" class="py-2.5 px-5 bg-red-950/30 hover:bg-red-900/40 border border-red-900/50 text-red-400 font-semibold rounded-xl text-xs transition duration-200 shadow-sm flex items-center">
+                        <i class="fa-solid fa-arrow-right-from-bracket mr-1.5"></i> Logout
+                    </a>
+                {% else %}
+                    <!-- Guest Controls -->
+                    <a href="/login/" class="py-2.5 px-5 text-zinc-400 hover:text-white font-semibold text-xs transition duration-200">
+                        Sign In
+                    </a>
+                    <a href="/register/" class="py-2.5 px-5 bg-zinc-100 hover:bg-white text-zinc-950 font-bold rounded-xl text-xs transition duration-200 shadow-md">
+                        Get Started
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Portfolio Showcase Area -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-6 py-16 relative z-10 space-y-16">
+        
+        <!-- Section 1: Hero Caption Header -->
+        <div class="max-w-3xl space-y-5">
+            <div class="inline-flex items-center space-x-2 px-3 py-1 bg-zinc-900 border border-zinc-800 rounded-full text-zinc-400 text-[10px] font-extrabold tracking-widest uppercase">
+                <i class="fa-solid fa-camera text-[9px] mr-1.5"></i> <span>Casey's Live Captures</span>
+            </div>
+            <h1 class="text-4xl sm:text-6xl font-black tracking-tight text-white leading-tight">
+                Moments Captured,<br>Stories Preserved.
+            </h1>
+            <!-- We display a welcoming subtitle describing Casey's live captures -->
+            <!-- Analogy: A description plate on the gallery wall welcoming visitors -->
+            <p class="text-zinc-400 text-base sm:text-lg font-light leading-relaxed max-w-2xl">
+                A pristine, high-fidelity gallery displaying raw, uncompressed photography. Explore specific natural landscapes and urban geometric structures.
+            </p>
+        </div>
+
+        <!-- Section 2: Visual Grid Portfolio -->
+        <!-- Analogy: The main gallery showroom walls where all the framed pictures are hung up -->
+        {% if photos %}
+            <!-- Grid Layout: 1 column on mobile, 2 on tablets, and 3 columns on standard laptops -->
+            <!-- Analogy: Arranging the picture frames neatly in rows and columns so it doesn't look cluttered -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="portfolio-grid">
+                <!-- Django Template Loop: Iterate through each Photo in the database -->
+                <!-- Analogy: The curator walking through the storage vaults and bringing out photos one by one -->
+                {% for photo in photos %}
+                    <!-- Individual Photo Card -->
+                    <!-- Analogy: A premium dark wooden frame holding the photograph and its description tag. We wrap the entire card in a hyperlink so visitors can click to view it in high resolution. -->
+                    <a href="{% url 'photo_detail' photo.id %}" class="photo-card block group relative bg-zinc-900/30 border border-zinc-900/80 hover:border-zinc-800 rounded-2xl overflow-hidden transition-all duration-500 hover:scale-[1.02] shadow-sm hover:shadow-2xl">
+                        
+                        <!-- Photo Frame Box -->
+                        <!-- Analogy: The glass box that protects the canvas print from dust -->
+                        <div class="w-full aspect-[4/3] bg-zinc-950 overflow-hidden relative">
+                            <!-- Image Canvas -->
+                            <!-- We point the src attribute directly to the photo object's built-in URL property -->
+                            <!-- Analogy: Django looks at the file path registry and streams the actual image file to the viewer -->
+                            <img src="{{ photo.image.url }}" alt="{{ photo.title }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        </div>
+
+                        <!-- Card Detail Footer Block -->
+                        <!-- Analogy: The brass informational plaque mounted right beneath the picture frame -->
+                        <div class="p-6 space-y-2.5">
+                            <div class="flex items-center justify-between">
+                                <!-- Parent Album Tag -->
+                                <!-- Analogy: The collection label identifying which album this photo belongs to -->
+                                <span class="py-1 px-2.5 bg-zinc-900 border border-zinc-800/80 rounded-md text-[9px] font-extrabold tracking-widest text-zinc-400 uppercase">
+                                    <i class="fa-solid fa-folder-open text-[8px] mr-1"></i> {{ photo.album.title }}
+                                </span>
+                                <!-- Date upload tag -->
+                                <!-- Analogy: The stamp showing the date this piece was hung on the wall -->
+                                <span class="text-zinc-500 text-[10px] font-semibold">
+                                    {{ photo.uploaded_at|date:"M d, Y" }}
+                                </span>
+                            </div>
+                            <!-- Photo Title Header -->
+                            <!-- Analogy: The bold, elegant title of the photograph -->
+                            <h3 class="text-white text-base font-bold tracking-tight truncate group-hover:text-zinc-300 transition-colors">
+                                {{ photo.title }}
+                            </h3>
+                        </div>
+                    </a>
+
+                {% endfor %}
+            </div>
+        {% else %}
+            <!-- Elegant Empty State if there are zero photographs in the database table -->
+            <!-- Analogy: An empty gallery hall with a welcoming sign inviting the artist to hang their first canvas -->
+            <div class="w-full border border-dashed border-zinc-800 rounded-3xl p-16 text-center space-y-6 bg-zinc-900/10">
+                <div class="w-16 h-16 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center mx-auto text-zinc-600">
+                    <i class="fa-solid fa-images text-2xl"></i>
+                </div>
+                <div class="space-y-2">
+                    <h3 class="text-white text-lg font-bold">No captures uploaded yet</h3>
+                    <p class="text-zinc-500 text-sm max-w-md mx-auto">Casey's portfolio is empty. Log into the admin panel or seed the database to display dynamic test photographs!</p>
+                </div>
+                {% if user.is_authenticated %}
+                    <a href="/dashboard/" class="py-3 px-6 bg-zinc-100 hover:bg-white text-zinc-950 text-xs font-bold rounded-xl shadow-md transition inline-block">
+                        Go to Dashboard
+                    </a>
+                {% else %}
+                    <a href="/login/" class="py-3 px-6 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-white text-xs font-bold rounded-xl shadow-md transition inline-block">
+                        Sign In & Upload
+                    </a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </main>
+
+    <!-- Footer Section -->
+    <!-- Analogy: The bottom plaque of the gallery building containing building information -->
+    <footer class="w-full border-t border-zinc-900 bg-zinc-950/40 py-8 text-center relative z-10">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
+            <p class="text-zinc-600 text-xs font-semibold">
+                &copy; 2026 LENS Gallery Portfolio. All rights reserved.
+            </p>
+            <div class="flex items-center space-x-6 text-zinc-500 text-sm">
+                <span class="hover:text-white cursor-pointer transition"><i class="fa-brands fa-instagram"></i></span>
+                <span class="hover:text-white cursor-pointer transition"><i class="fa-brands fa-twitter"></i></span>
+                <span class="hover:text-white cursor-pointer transition"><i class="fa-brands fa-unsplash"></i></span>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
