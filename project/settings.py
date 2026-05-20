@@ -174,3 +174,34 @@ AUTH_USER_MODEL = 'accounts.User'
 # By passing the URL name 'login', Django will look up the path mapped to name='login' in our URLs.
 LOGIN_URL = 'login'
 
+# ==============================================================================
+# REAL-WORLD ANALOGY: The Public Shop Display vs the Physical Storage Warehouse
+# ------------------------------------------------------------------------------
+# Imagine you are running a premium photography framing business.
+# 
+# 1. The Physical Warehouse (MEDIA_ROOT):
+# This is a large, secure physical building (a folder on your hard drive) where all
+# the heavy raw canvases, printed photographs, and picture frames are actually stored.
+# If a photo file is uploaded by a customer, this is the exact hard drive folder on the
+# computer where the file gets saved.
+# 
+# 2. The Public Display Window (MEDIA_URL):
+# You don't want customers walking into your dusty warehouse and searching through shelves!
+# Instead, you build a sleek glass display window on the street side with a clear sign
+# labeled "/media/". When a client wants to see their picture, they don't look in the warehouse;
+# they just walk up to the street address and look through the display window at "/media/my-photo.jpg".
+# 
+# MEDIA_URL tells the web browser what public address prefix to use when requesting an image.
+# MEDIA_ROOT tells the server's filesystem exactly where to write and save that file.
+# ==============================================================================
+
+# The public web address path prefix that Django will prepend to the URL of any uploaded file.
+# For example, an image named 'sunset.jpg' will be requested by the browser at '/media/sunset.jpg'.
+# This must start and end with a forward slash to form a valid address path prefix.
+MEDIA_URL = '/media/'
+
+# The absolute filesystem path to the directory on your computer's hard drive where uploaded media files will be saved.
+# We use BASE_DIR (which represents the project's root folder) and join it with a folder named 'media'.
+# Django will automatically create this directory if it doesn't already exist when a file is saved.
+MEDIA_ROOT = BASE_DIR / 'media'
+
